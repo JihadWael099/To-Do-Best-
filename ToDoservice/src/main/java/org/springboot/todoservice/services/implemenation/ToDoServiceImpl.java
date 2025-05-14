@@ -1,6 +1,8 @@
 package org.springboot.todoservice.services.implemenation;
 import jakarta.transaction.TransactionScoped;
+import org.aspectj.weaver.ast.Not;
 import org.springboot.todoservice.entity.TodoEntity;
+import org.springboot.todoservice.exception.NotFoundException;
 import org.springboot.todoservice.repositories.ToDoEntityRepo;
 import org.springboot.todoservice.services.ToDoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +32,18 @@ public class ToDoServiceImpl implements ToDoService {
 
     @Transactional
     @Override
-    public String removeToDo(int id) {
+    public String removeToDo(int id) throws NotFoundException {
         Optional<TodoEntity> todoEntity = toDoEntityRepo.findById(id);
-        if(todoEntity.isEmpty())return "not found to delete";
+        if(todoEntity.isEmpty())throw new NotFoundException("not found to remove");
         else toDoEntityRepo.delete(todoEntity.get());
         return "deleted";
     }
 
     @Transactional
     @Override
-    public TodoEntity viewToDoById(int id) {
+    public TodoEntity viewToDoById(int id) throws NotFoundException {
         Optional<TodoEntity> todoEntity = toDoEntityRepo.findById(id);
-        if(todoEntity.isEmpty())throw new RuntimeException("not found");
+        if(todoEntity.isEmpty())throw new NotFoundException("not found");
         else return todoEntity.get();
     }
 
@@ -55,5 +57,13 @@ public class ToDoServiceImpl implements ToDoService {
     @Override
     public List<TodoEntity> viewByUserId(int id) {
         return toDoEntityRepo.findAllByUserId(id);
+    }
+
+    @Override
+    @Transactional
+    public TodoEntity updateTitle(String title, int id) throws NotFoundException {
+        TodoEntity todoEntity =toDoEntityRepo.findById(id).orElseThrow(()->new NotFoundException("not found"));
+        todoEntity.setTitle(title);
+        return toDoEntityRepo.save(todoEntity);
     }
 }

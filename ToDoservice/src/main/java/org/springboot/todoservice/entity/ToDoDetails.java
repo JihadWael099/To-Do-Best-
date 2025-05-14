@@ -1,5 +1,7 @@
 package org.springboot.todoservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -42,7 +44,20 @@ public class ToDoDetails {
     private Status status;
 
     @OneToOne(mappedBy = "details_id" ,cascade = CascadeType.ALL)
+    @JsonIgnore
     private TodoEntity todoEntity;
+
+
+    @Transient
+    @NotNull(message = "entity ID is required")
+    private int  entityId;
+
+
+    @JsonProperty("entityId")
+    public int  getEntityId() {
+        return todoEntity != null ? todoEntity.getId() : entityId;
+    }
+
 
     public int getId() {
         return id;
@@ -108,15 +123,16 @@ public class ToDoDetails {
         this.todoEntity = todoEntity;
     }
 
-    public ToDoDetails(TodoEntity todoEntity, Status status, LocalDateTime finishAt, LocalDateTime startAt, LocalDateTime createAt, Priority priority, String description, int id) {
-        this.todoEntity = todoEntity;
-        this.status = status;
-        this.finishAt = finishAt;
-        this.startAt = startAt;
-        this.createAt = createAt;
-        this.priority = priority;
-        this.description = description;
+    public ToDoDetails(int id, String description, Priority priority, LocalDateTime createAt, LocalDateTime startAt, LocalDateTime finishAt, Status status, TodoEntity todoEntity, int entityId) {
         this.id = id;
+        this.description = description;
+        this.priority = priority;
+        this.createAt = createAt;
+        this.startAt = startAt;
+        this.finishAt = finishAt;
+        this.status = status;
+        this.todoEntity = todoEntity;
+        this.entityId = entityId;
     }
 
     public ToDoDetails() {

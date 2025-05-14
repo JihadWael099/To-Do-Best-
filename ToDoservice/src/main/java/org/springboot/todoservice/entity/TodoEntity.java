@@ -25,6 +25,7 @@ public class TodoEntity {
     private String title;
 
     private int userId;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id")
     private ToDoDetails details_id;
