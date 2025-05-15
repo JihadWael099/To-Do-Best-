@@ -15,7 +15,8 @@ public class JWT {
     private int id;
 
 
-    @NotBlank(message = "token can,t be null")
+    @NotBlank(message = "token can't be null")
+    @Column(nullable = false, unique = true)
     private String token;
 
     @ManyToOne
@@ -31,8 +32,67 @@ public class JWT {
     @Column(updatable = false)
     private LocalDateTime expiration_date;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TokenType type;
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
+    }
+
+    public LocalDateTime getExpiration_date() {
+        return expiration_date;
+    }
+
+    public void setExpiration_date(LocalDateTime expiration_date) {
+        this.expiration_date = expiration_date;
+    }
+
+    public TokenType getType() {
+        return type;
+    }
+
+    public void setType(TokenType type) {
+        this.type = type;
+    }
+
+    public JWT(int id, String token, Users user, LocalDateTime created_at, LocalDateTime expiration_date, TokenType type) {
+        this.id = id;
+        this.token = token;
+        this.user = user;
+        this.created_at = created_at;
+        this.expiration_date = expiration_date;
+        this.type = type;
+    }
+
+    public JWT() {
+    }
 }
