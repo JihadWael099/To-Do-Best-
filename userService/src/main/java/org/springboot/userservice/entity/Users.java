@@ -2,21 +2,19 @@ package org.springboot.userservice.entity;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-
+import jakarta.validation.constraints.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collection;
 import java.util.List;
-
 @Entity
-public class Users {
+public class Users implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  int id;
-    @Min(value = 8,message = "provide min 8 character ")
-    @Max(value = 20,message = "max is 20 character")
+
+    @NotBlank(message = "passord is requird")
     private String password;
 
     @NotBlank(message = "provide a valid username")
@@ -28,7 +26,7 @@ public class Users {
 
 
     @Column(nullable = false)
-    private boolean enable = false;
+    private boolean enable = true;
 
     @OneToMany(mappedBy = "user")
     private List<OTP> otp;
@@ -36,12 +34,19 @@ public class Users {
     @OneToMany(mappedBy = "user")
     private List<JWT> jwt;
 
+
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
     }
 
     public String getPassword() {
@@ -54,6 +59,26 @@ public class Users {
 
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return  true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enable;
     }
 
     public void setUsername(String username) {
@@ -76,8 +101,20 @@ public class Users {
         this.enable = enable;
     }
 
+    public Users(String password, String username) {
+        this.password = password;
+        this.username = username;
+    }
+
     public Users(int id, String password, String username, String email, boolean enable) {
         this.id = id;
+        this.password = password;
+        this.username = username;
+        this.email = email;
+        this.enable = enable;
+    }
+
+    public Users(String password, String username, String email, boolean enable) {
         this.password = password;
         this.username = username;
         this.email = email;
