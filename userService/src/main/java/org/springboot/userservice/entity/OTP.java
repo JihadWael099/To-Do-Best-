@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.apache.catalina.User;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 public class OTP {
@@ -18,12 +20,14 @@ public class OTP {
     private String otp;
 
     @Column(nullable = false)
-    private int expiration_time;
+    private LocalDateTime expiration_time;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "users_id",nullable = false)
     private Users user;
-
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(expiration_time);
+    }
     public int getId() {
         return id;
     }
@@ -40,11 +44,11 @@ public class OTP {
         this.otp = otp;
     }
 
-    public int getExpiration_time() {
+    public LocalDateTime getExpiration_time() {
         return expiration_time;
     }
 
-    public void setExpiration_time(int expiration_time) {
+    public void setExpiration_time(LocalDateTime expiration_time) {
         this.expiration_time = expiration_time;
     }
 
@@ -56,7 +60,7 @@ public class OTP {
         this.user = user;
     }
 
-    public OTP(int id, String otp, int expiration_time, Users user) {
+    public OTP(int id, String otp, LocalDateTime expiration_time, Users user) {
         this.id = id;
         this.otp = otp;
         this.expiration_time = expiration_time;

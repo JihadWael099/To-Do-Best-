@@ -10,13 +10,11 @@ import org.springboot.userservice.entity.Users;
 import org.springboot.userservice.repository.JwtRepo;
 import org.springboot.userservice.util.TokenType;
 import org.springframework.stereotype.Service;
-
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Map;
 @Service
 public class JwtService {
     private final static String SECRET_KEY="gehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehadgehad";
@@ -56,11 +54,15 @@ public class JwtService {
         return request.getHeader("Authorization");
     }
     public boolean validateToken(String token) {
+        try {
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
             return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public boolean isTokenExpired(String token) {
@@ -71,6 +73,16 @@ public class JwtService {
                 .getExpiration();
         return expirationDate.before(new Date());
     }
+    public String getUsernameFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+
 
 
 }

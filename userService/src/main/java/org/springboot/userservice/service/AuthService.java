@@ -38,6 +38,7 @@ public class AuthService {
             throw new UserAlreadyExistsException("User is already registered");
         }
         users.setPassword(passwordEncoder.encode(users.getPassword()));
+        users.setEnable(false);
         userService.addUser(users);
         return jwtService.generateToken(users);
     }
