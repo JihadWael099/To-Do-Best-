@@ -1,0 +1,41 @@
+<!-- <div class="container my-5 d-flex justify-content-center">
+  <div class="card mb-3 shadow p-3 mb-5 bg-body-tertiary rounded" style="max-width: 540px;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img [src]="movie.poster" class="img-fluid rounded-start" alt="movie poster">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">{{ movie.title }} ({{ movie.year }})</h5>
+          <p class="card-text"><strong>Genre:</strong> {{ movie.genre }}</p>
+          <p class="card-text"><strong>Director:</strong> {{ movie.director }}</p>
+          <p class="card-text"><strong>Writer:</strong> {{ movie.writer }}</p>
+          <p class="card-text"><strong>Actors:</strong> {{ movie.actors }}</p>
+          <p class="card-text"><strong>Plot:</strong> {{ movie.plot }}</p>
+          <p class="card-text"><strong>Language:</strong> {{ movie.language }}</p>
+          <p class="card-text"><strong>Country:</strong> {{ movie.country }}</p>
+          <p class="card-text"><strong>Awards:</strong> {{ movie.awards }}</p>
+          <p class="card-text"><strong>Box Office:</strong> {{ movie.boxOffice }}</p>
+          <p class="card-text"><strong>IMDb Rating:</strong> {{ movie.imdbRating }} ({{ movie.imdbVotes }} votes)</p>
+          <p class="card-text"><strong>MetaScore:</strong> {{ movie.metaScore }}</p>
+          <p class="card-text"><strong>Runtime:</strong> {{ movie.runtime }}</p>
+          <p class="card-text"><strong>Released:</strong> {{ movie.released }}</p>
+          <p class="card-text"><strong>Rated:</strong> {{ movie.rated }}</p>
+          <p class="card-text"><strong>DVD Release:</strong> {{ movie.dvd }}</p>
+          <p class="card-text"><strong>Website:</strong> <a [href]="movie.website" target="_blank">{{ movie.website }}</a></p>
+          
+          <p >Average Rating: {{ avgRating }}</p>
+          
+          <button class="btn btn-primary" (click)="openRatingBox()" *ngIf="!isAdmin">Rate Movie</button>
+
+          <div *ngIf="showRatingBox" class="rating-box">
+            <label for="rating">Rate the Movie:</label>
+            <input type="number" id="rating" [(ngModel)]="rating" min="1" max="5" step="0.5">
+            <button class="btn btn-success" (click)="submitRating()">Submit</button>
+            <button class="btn btn-danger" (click)="closeRatingBox()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->

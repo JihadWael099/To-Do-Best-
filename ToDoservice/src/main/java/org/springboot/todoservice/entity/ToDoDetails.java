@@ -22,10 +22,7 @@ public class ToDoDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-
     private String description;
-
     @Enumerated(EnumType.STRING)
     @NotNull(message = "you should  enter the priority")
     private Priority priority;

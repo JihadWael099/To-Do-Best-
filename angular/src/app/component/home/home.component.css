@@ -1,0 +1,5 @@
+.blur-image {
+    filter: blur(1.5px);
+    opacity: 0.9;
+  }
+  

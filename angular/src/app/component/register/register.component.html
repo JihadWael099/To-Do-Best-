@@ -1,0 +1,38 @@
+<div class="container my-5">
+    <form [formGroup]="registerForm" (ngSubmit)="handleFormSubmit()">
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input type="text" class="form-control" formControlName="username">
+        <div *ngIf="formControls['username'].invalid && formControls['username'].touched">
+          <div *ngIf="formControls['username'].hasError('required')">
+            <div class="text-danger">Username is required</div>
+          </div>
+          <div *ngIf="formControls['username'].hasError('noSpaces')">
+            <div class="text-danger">No spaces allowed</div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" formControlName="email">
+        <div *ngIf="formControls['email'].invalid && formControls['email'].touched">
+          <p class="text-danger">Please provide a valid email.</p>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" formControlName="password">
+      </div>
+      <div *ngIf="errorMessage">
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      </div>
+  
+      <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid || isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+        Register
+      </button>
+    </form>
+  </div>
+  

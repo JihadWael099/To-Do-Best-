@@ -1,0 +1,58 @@
+<div class="container my-5">
+    <form #loginForm="ngForm" (ngSubmit)="handleFormSubmit(loginForm)">
+     
+      <div class="mb-3">
+        <label for="InputUsername" class="form-label">Username</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="InputUsername" 
+          name="username" 
+          [(ngModel)]="formValues.username" 
+          required 
+          #username="ngModel"
+        >
+        @if(username.invalid && username.touched) {
+          <div class="form-text text-danger">Username is required</div>
+        }
+      </div>
+  
+     
+      <div class="mb-3">
+        <label for="InputPassword" class="form-label">Password</label>
+        <input 
+          type="password" 
+          class="form-control" 
+          id="InputPassword" 
+          name="password" 
+          [(ngModel)]="formValues.password" 
+          required 
+          #password="ngModel"
+        >
+        @if(password.invalid && password.touched) {
+          <div class="form-text text-danger">Password is required</div>
+        }
+      </div>
+  
+     
+      <button 
+        type="submit" 
+        class="btn btn-success" 
+        [disabled]="loginForm.invalid || isLoading"
+      >
+        @if (isLoading) {
+          <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+          Logging in...
+        } @else {
+          Login
+        }
+      </button>
+  
+     
+      @if (loginError) {
+        <div class="alert alert-danger mt-3">
+          {{ loginError }}
+        </div>
+      }
+    </form>
+  </div>

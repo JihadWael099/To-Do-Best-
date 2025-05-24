@@ -30,11 +30,18 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
     public Users addUser(Users newUser) {
-        if (userRepo.findByUsername(newUser.getUsername()).isPresent()) {
+        Optional<Users> existingUser = userRepo.findByUsername(newUser.getUsername());
+
+        if (existingUser.isPresent()) {
+            if (!existingUser.get().isEnabled()) {
+                throw new IllegalArgumentException("User must be verified");
+            }
             throw new UserAlreadyExistsException("Username is already taken: " + newUser.getUsername());
         }
+
         return userRepo.save(newUser);
     }
+
     public void deleteUser(int id) {
         Users user = getUserById(id);
         userRepo.delete(user);

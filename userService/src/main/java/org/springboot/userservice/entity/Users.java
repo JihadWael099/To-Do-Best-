@@ -26,12 +26,12 @@ public class Users implements UserDetails {
 
 
     @Column(nullable = false)
-    private boolean enable = true;
+    private boolean enable = false;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user" ,cascade = CascadeType.ALL)
     private List<OTP> otp;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<JWT> jwt;
 
 

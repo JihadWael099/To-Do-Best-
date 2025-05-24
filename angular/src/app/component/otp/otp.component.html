@@ -1,0 +1,40 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Verify OTP</h2>
+          <form [formGroup]="otpForm" (ngSubmit)="handleFormSubmit()">
+            <div class="mb-3">
+              <label for="otp" class="form-label">OTP</label>
+              <input
+                id="otp"
+                formControlName="otp"
+                type="text"
+                class="form-control"
+                [ngClass]="{'is-invalid': formControls['otp'].invalid && formControls['otp'].touched}"
+              />
+              <div *ngIf="formControls['otp'].invalid && formControls['otp'].touched" class="invalid-feedback">
+                <small *ngIf="formControls['otp'].errors?.['required']">OTP is required.</small>
+                <small *ngIf="formControls['otp'].errors?.['minlength'] || formControls['otp'].errors?.['maxlength']">OTP must be 6 characters.</small>
+              </div>
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary w-100"
+              [disabled]="isLoading || otpForm.invalid"
+            >
+              {{ isLoading ? 'Verifying...' : 'Verify OTP' }}
+            </button>
+          </form>
+          <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
+            {{ errorMessage }}
+          </div>
+          <div *ngIf="successMessage" class="alert alert-success mt-3" role="alert">
+            {{ successMessage }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
