@@ -1,7 +1,5 @@
-# ToDa App Two Service
-
 ## Overview
-**ToDa App Two Service** is a microservices-based project consisting of two independent services:
+**ToDa App** is a microservices-based project consisting of two independent services:
 
 - **User Service**: Handles user management, authentication, authorization (with JWT), password reset via OTP, and user registration.
 - **Todo Service**: Manages CRUD operations on todo items, each linked to a specific user.
