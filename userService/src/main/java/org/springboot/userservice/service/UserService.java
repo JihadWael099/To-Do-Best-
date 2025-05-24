@@ -1,5 +1,6 @@
 package org.springboot.userservice.service;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springboot.userservice.dto.UserDto;
 import org.springboot.userservice.entity.OTP;
 import org.springboot.userservice.entity.Users;
 import org.springboot.userservice.exceptions.UserAlreadyExistsException;
@@ -107,5 +108,17 @@ public class UserService {
         otpService.deleteOtp(otp);
         return "Password changed successfully";
     }
+    public UserDto getUserDtoById(int id){
+        Optional<Users> users =userRepo.findById(id);
+        if (! users.isPresent()){
+            throw new UserNotFoundException("user not found");
+        }
+        UserDto userDto = new UserDto();
+        userDto.setEmail(users.get().getEmail());
+        userDto.setUsername(users.get().getUsername());
+        userDto.setId(users.get().getId());
+        return userDto;
+    }
+
 
 }

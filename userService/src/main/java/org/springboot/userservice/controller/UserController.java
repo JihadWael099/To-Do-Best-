@@ -1,16 +1,12 @@
 package org.springboot.userservice.controller;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springboot.userservice.entity.Users;
+import org.springboot.userservice.dto.UserDto;
 import org.springboot.userservice.exceptions.UserNotFoundException;
-import org.springboot.userservice.service.JwtService;
 import org.springboot.userservice.service.OtpService;
 import org.springboot.userservice.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
-
 @RestController
 @RequestMapping("api/v1/user")
 public class UserController {
@@ -36,5 +32,10 @@ public class UserController {
     @PostMapping("/forgetPassword")
     public String forgetPassword(HttpServletRequest request) {
         return userService.forgetPassword(request);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable("id") int id){
+        return ResponseEntity.ok(userService.getUserDtoById(id));
     }
 }
