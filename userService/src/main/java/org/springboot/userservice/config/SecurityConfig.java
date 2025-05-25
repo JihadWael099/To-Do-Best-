@@ -1,5 +1,6 @@
 package org.springboot.userservice.config;
 
+import org.springboot.userservice.repository.JwtRepo;
 import org.springboot.userservice.service.JwtFilter;
 import org.springboot.userservice.service.JwtService;
 import org.springboot.userservice.service.UserService;
@@ -7,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,24 +29,26 @@ public class SecurityConfig {
 
     private final UserService userService;
     private final JwtService jwtService;
+    private final JwtRepo jwtRepo;
 
-    public SecurityConfig(@Lazy UserService userService, JwtService jwtService) {
+    public SecurityConfig(@Lazy UserService userService, JwtService jwtService, JwtRepo jwtRepo) {
         this.userService = userService;
         this.jwtService = jwtService;
+        this.jwtRepo = jwtRepo;
     }
 
     @Bean
     public JwtFilter jwtFilter() {
-        return new JwtFilter(jwtService, userService);
+        return new JwtFilter(jwtService, userService, jwtRepo);
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Use explicit CORS config
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**", "/error", "/api/v1/otp/send", "/api/v1/user/activate").permitAll()
+                        .requestMatchers("/api/v1/auth/**", "/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -69,8 +74,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
+
+    public AuthenticationProvider authenticationProvider(UserService userService, PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean

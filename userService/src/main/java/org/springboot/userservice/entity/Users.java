@@ -34,7 +34,21 @@ public class Users implements UserDetails {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<JWT> jwt;
 
+    public void setOtp(List<OTP> otp) {
+        this.otp = otp;
+    }
 
+    public void setJwt(List<JWT> jwt) {
+        this.jwt = jwt;
+    }
+
+    public List<OTP> getOtp() {
+        return otp;
+    }
+
+    public List<JWT> getJwt() {
+        return jwt;
+    }
 
     public int getId() {
         return id;

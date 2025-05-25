@@ -1,5 +1,6 @@
 package org.springboot.userservice.controller;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springboot.userservice.dto.ChangePasswordDto;
 import org.springboot.userservice.dto.UserDto;
 import org.springboot.userservice.exceptions.UserNotFoundException;
 import org.springboot.userservice.service.OtpService;
@@ -29,13 +30,41 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Activation failed: " + e.getMessage());
         }
     }
-    @PostMapping("/forgetPassword")
-    public String forgetPassword(HttpServletRequest request) {
-        return userService.forgetPassword(request);
+    @PostMapping("/api/v1/user/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDto changePasswordDto ,
+                                            @RequestHeader("otp") String otp
+                                            ) {
+        if (!otpService.verifyOtp(changePasswordDto.getUsername(), otp)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired OTP");
+        }
+        userService.changePassword(
+                changePasswordDto.getUsername(),
+                changePasswordDto.getOldPassword(),
+                changePasswordDto.getNewPassword(),
+                otp);
+        return ResponseEntity.ok("Password changed successfully");
+    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String username,
+                                                @RequestParam String otpCode,
+                                                @RequestParam String newPassword) {
+        String result = userService.resetPasswordWithOtp(username, otpCode, newPassword);
+        if (result.equals("Password reset successful")) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        }
+    }
+    @PostMapping("/forget-password")
+    public ResponseEntity<String> forgetPassword(@RequestParam String username) {
+        String response = userService.forgetPassword(username);
+        if (response.equals("OTP sent to registered email")) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable("id") int id){
-        return ResponseEntity.ok(userService.getUserDtoById(id));
-    }
+
+
 }

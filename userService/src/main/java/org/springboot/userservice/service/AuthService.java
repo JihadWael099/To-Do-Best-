@@ -1,5 +1,7 @@
 package org.springboot.userservice.service;
+
 import org.springboot.userservice.dto.LoginDto;
+import org.springboot.userservice.dto.LoginResponse;
 import org.springboot.userservice.entity.Users;
 import org.springboot.userservice.exceptions.UserAlreadyExistsException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,7 +22,7 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public String login(LoginDto loginDto) {
+    public LoginResponse login(LoginDto loginDto) {
         Users users = userService.getUserByName(loginDto.getUsername())
                 .orElseThrow(() -> new BadCredentialsException("User not found"));
         if (!passwordEncoder.matches(loginDto.getPassword(), users.getPassword())) {
@@ -29,7 +31,10 @@ public class AuthService {
         if (!users.isEnable()) {
             throw new IllegalArgumentException("User must be verified");
         }
-        return jwtService.generateToken(users);
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(jwtService.generateToken(users));
+        loginResponse.setUsername(loginDto.getUsername());
+        return loginResponse;
     }
 
     public String register(Users users) {

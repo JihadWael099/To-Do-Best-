@@ -14,7 +14,6 @@ public class OTP {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     @NotBlank(message = "otp can,t be null")
     @Column(nullable = false)
     private String otp;
@@ -22,7 +21,7 @@ public class OTP {
     @Column(nullable = false)
     private LocalDateTime expiration_time;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "users_id",nullable = false)
     private Users user;
     public boolean isExpired() {

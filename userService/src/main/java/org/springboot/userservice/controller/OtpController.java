@@ -1,11 +1,9 @@
 package org.springboot.userservice.controller;
 import org.springboot.userservice.service.EmailService;
 import org.springboot.userservice.service.OtpService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/otp")
@@ -27,6 +25,16 @@ public class OtpController {
             return ResponseEntity.ok("OTP email sent successfully!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to send OTP: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/api/v1/otp/verify")
+    public ResponseEntity<?> verifyOtp(@RequestParam String username, @RequestParam String otp) {
+        boolean isValid = otpService.verifyOtp(username, otp);
+        if (isValid) {
+            return ResponseEntity.ok("OTP verified successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired OTP");
         }
     }
 }

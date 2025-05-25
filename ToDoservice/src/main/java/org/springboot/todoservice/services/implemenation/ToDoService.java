@@ -13,7 +13,7 @@ public class ToDoService {
 
     private final ToDoEntityRepo toDoEntityRepo;
     private final UserService userService;
-    @Autowired
+
     public ToDoService(ToDoEntityRepo toDoEntityRepo, UserService userService) {
         this.toDoEntityRepo = toDoEntityRepo;
         this.userService = userService;
@@ -23,7 +23,6 @@ public class ToDoService {
         if (!userService.validateToken(token)) {
             throw new RuntimeException("Invalid or expired token");
         }
-
         try {
             userService.getUserById(userId, token);
         } catch (Exception e) {
@@ -34,45 +33,36 @@ public class ToDoService {
     @Transactional
     public TodoEntity addToDo(TodoEntity todoEntity, String token) {
         validateUser(todoEntity.getUserId(), token);
-
         TodoEntity todo = new TodoEntity();
         todo.setTitle(todoEntity.getTitle());
         todo.setUserId(todoEntity.getUserId());
         todo.setDetails_id(todoEntity.getDetails_id());
-
         toDoEntityRepo.save(todo);
         return todo;
     }
 
     @Transactional
-
-    public String removeToDo(int id, int userId, String token) {
+    public String removeToDo(int id, int userId, String token) throws NotFoundException {
         validateUser(userId, token);
-
-        Optional<TodoEntity> todoEntity = toDoEntityRepo.findById(id);
+        Optional<TodoEntity> todoEntity = toDoEntityRepo.findByIdAndUserId(id,userId);
         if (todoEntity.isEmpty()) throw new NotFoundException("not found to remove");
-
         toDoEntityRepo.delete(todoEntity.get());
         return "deleted";
     }
 
     @Transactional
-
-    public TodoEntity viewToDoById(int id, int userId, String token) {
+    public TodoEntity viewToDoById(int id, int userId, String token) throws NotFoundException {
         validateUser(userId, token);
-
-        return toDoEntityRepo.findById(id).orElseThrow(() -> new NotFoundException("not found"));
+        return toDoEntityRepo.findByIdAndUserId(id,userId).orElseThrow(() -> new NotFoundException("not found"));
     }
 
     @Transactional
-
     public List<TodoEntity> viewToDoByTitle(String title, int userId, String token) {
         validateUser(userId, token);
-        return toDoEntityRepo.findAllByTitle(title);
+        return toDoEntityRepo.findAllByTitleAndUserId(title,userId);
     }
 
     @Transactional
-
     public List<TodoEntity> viewByUserId(int id, String token) {
         validateUser(id, token);
         return toDoEntityRepo.findAllByUserId(id);
@@ -80,7 +70,7 @@ public class ToDoService {
 
     @Transactional
 
-    public TodoEntity updateTitle(String title, int id, int userId, String token) {
+    public TodoEntity updateTitle(String title, int id, int userId, String token) throws NotFoundException {
         validateUser(userId, token);
 
         TodoEntity todoEntity = toDoEntityRepo.findById(id).orElseThrow(() -> new NotFoundException("not found"));

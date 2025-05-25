@@ -19,7 +19,7 @@ public class JWT {
     @Column(nullable = false, unique = true)
     private String token;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "users_id")
     private Users user;
 

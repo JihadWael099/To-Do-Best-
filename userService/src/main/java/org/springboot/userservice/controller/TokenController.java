@@ -21,9 +21,7 @@ public class TokenController {
         if (token == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing token");
         }
-        boolean isValid = jwtService.validateToken(token);
-        boolean isExpired = jwtService.isTokenExpired(token);
-        if (!isValid || isExpired) {
+        if (! jwtService.validateToken(token) ) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
         }
         return ResponseEntity.ok("Token is valid");
