@@ -2,17 +2,28 @@ package org.springboot.userservice.entity;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.List;
+
 @Entity
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Users implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  int id;
+    private int id;
 
     @NotBlank(message = "passord is requird")
     private String password;
@@ -20,7 +31,7 @@ public class Users implements UserDetails {
     @NotBlank(message = "provide a valid username")
     private String username;
 
-    @Email(message ="provide valid email")
+    @Email(message = "provide valid email")
     @NotBlank(message = "provide a valid email")
     private String email;
 
@@ -28,56 +39,31 @@ public class Users implements UserDetails {
     @Column(nullable = false)
     private boolean enable = false;
 
-    @OneToMany(mappedBy = "user" ,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<OTP> otp;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<JWT> jwt;
 
-    public void setOtp(List<OTP> otp) {
-        this.otp = otp;
-    }
-
-    public void setJwt(List<JWT> jwt) {
-        this.jwt = jwt;
-    }
-
-    public List<OTP> getOtp() {
-        return otp;
-    }
-
-    public List<JWT> getJwt() {
-        return jwt;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
 
+    @Override
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
+    @Override
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return  true;
+        return true;
     }
 
     @Override
@@ -95,46 +81,5 @@ public class Users implements UserDetails {
         return this.enable;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public boolean isEnable() {
-        return enable;
-    }
-
-    public void setEnable(boolean enable) {
-        this.enable = enable;
-    }
-
-    public Users(String password, String username) {
-        this.password = password;
-        this.username = username;
-    }
-
-    public Users(int id, String password, String username, String email, boolean enable) {
-        this.id = id;
-        this.password = password;
-        this.username = username;
-        this.email = email;
-        this.enable = enable;
-    }
-
-    public Users(String password, String username, String email, boolean enable) {
-        this.password = password;
-        this.username = username;
-        this.email = email;
-        this.enable = enable;
-    }
-
-    public Users() {
-    }
 }
