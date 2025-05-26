@@ -1,5 +1,6 @@
 package org.springboot.todoservice.services.implemenation;
 import org.springboot.todoservice.entity.ToDoDetails;
+import org.springboot.todoservice.entity.UserDto;
 import org.springboot.todoservice.exception.NotFoundException;
 import org.springboot.todoservice.repositories.ToDoDetailsRepo;
 import org.springboot.todoservice.repositories.ToDoEntityRepo;
@@ -15,19 +16,13 @@ public class ToDoDetailsService {
         this.userService = userService;
         this.toDoEntityRepo = toDoEntityRepo;
     }
-    private void validateUser(int userId, String token) {
-        if (!userService.validateToken(token)) {
-            throw new RuntimeException("Invalid or expired token");
-        }
-        try {
-            userService.getUserById(userId, token);
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid user");
-        }
+    private int validateUser(String token) {
+        UserDto userDto = userService.validateToken(token);
+        return userDto.getId();
     }
-    public ToDoDetails updateDetails(ToDoDetails toDoDetails, int id , int userId, String token) throws NotFoundException {
-        validateUser(userId,token);
-       ToDoDetails toDo = toDoDetailsRepo.findById(id)
+    public ToDoDetails updateDetails(ToDoDetails toDoDetails ,String token) throws NotFoundException {
+        int userId=validateUser(token);
+       ToDoDetails toDo = toDoDetailsRepo.findById(toDoDetails.getEntityId())
                 .orElseThrow(() -> new NotFoundException("notfound"));
         if(toDoDetails.getStatus()!=null)
             toDo.setStatus(toDoDetails.getStatus());
@@ -42,14 +37,14 @@ public class ToDoDetailsService {
         return  toDoDetailsRepo.save(toDo);
     }
 
-    public ToDoDetails viewDetailsById(int id, int userId,String token) throws NotFoundException {
-        validateUser(userId,token);
+    public ToDoDetails viewDetailsById(int id,String token) throws NotFoundException {
+        int userId=validateUser(token);
         return toDoDetailsRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("notfound"));
     }
 
-    public ToDoDetails addDetails(ToDoDetails toDoDetails , int userId,String token) throws NotFoundException {
-        validateUser(userId,token);
+    public ToDoDetails addDetails(ToDoDetails toDoDetails , String token) throws NotFoundException {
+        int userId=validateUser(token);
         return toDoEntityRepo.findById(toDoDetails.getEntityId())
                 .map(entity -> toDoDetailsRepo.save(toDoDetails))
                 .orElseThrow(() -> new NotFoundException("ToDoEntity not found"));

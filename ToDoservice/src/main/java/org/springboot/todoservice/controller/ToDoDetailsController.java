@@ -14,22 +14,17 @@ public class ToDoDetailsController {
     @PostMapping("")
     public ResponseEntity<ToDoDetails> addDetails(
             @RequestBody ToDoDetails toDoDetails,
-            @RequestHeader("Authorization") String token,
-            @RequestParam int userId) throws NotFoundException {
-        return ResponseEntity.ok(toDoDetailsService.addDetails(toDoDetails,userId,token));
+            @RequestHeader("Authorization") String token) throws NotFoundException {
+        return ResponseEntity.ok(toDoDetailsService.addDetails(toDoDetails,token));
     }
     @PutMapping("/{id}")
     public ResponseEntity<ToDoDetails> updateDetails(@RequestBody ToDoDetails toDoDetails,
                                                      @RequestHeader("Authorization") String token,
-                                                     @RequestParam int userId,
                                                      @PathVariable("id") int id) throws NotFoundException {
-        return ResponseEntity.ok(toDoDetailsService.updateDetails(toDoDetails,id,userId,token));
+        return ResponseEntity.ok(toDoDetailsService.updateDetails(toDoDetails,id,token));
     }
     @GetMapping("/{id}")
-    public ResponseEntity<ToDoDetails> viewDetails(@PathVariable("id") int id,
-                                                   @RequestHeader("Authorization") String token,
-                                                   @RequestParam int userId
-    ) throws NotFoundException {
-        return ResponseEntity.ok(toDoDetailsService.viewDetailsById(id ,userId,token));
+    public ResponseEntity<ToDoDetails> viewDetails(@PathVariable("id") int id, @RequestHeader("Authorization") String token) throws NotFoundException {
+        return ResponseEntity.ok(toDoDetailsService.viewDetailsById(id ,token));
     }
 }

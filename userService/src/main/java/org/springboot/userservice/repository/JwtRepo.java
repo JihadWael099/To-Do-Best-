@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface JwtRepo extends JpaRepository<JWT, Integer> {
     boolean existsByToken(String token);
 
-   JWT findByToken(String jwt);
+    JWT findByToken(String jwt);
 }

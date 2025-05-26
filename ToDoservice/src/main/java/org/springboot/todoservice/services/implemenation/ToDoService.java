@@ -1,8 +1,9 @@
 package org.springboot.todoservice.services.implemenation;
 import org.springboot.todoservice.entity.TodoEntity;
+import org.springboot.todoservice.entity.UserDto;
 import org.springboot.todoservice.exception.NotFoundException;
+import org.springboot.todoservice.exception.TokenValidationException;
 import org.springboot.todoservice.repositories.ToDoEntityRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,31 +20,28 @@ public class ToDoService {
         this.userService = userService;
     }
 
-    private void validateUser(int userId, String token) {
-        if (!userService.validateToken(token)) {
-            throw new RuntimeException("Invalid or expired token");
-        }
-        try {
-            userService.getUserById(userId, token);
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid user");
-        }
+    private int validateUser(String token) {
+        UserDto userDto = userService.validateToken(token);
+        return userDto.getId();
     }
 
     @Transactional
     public TodoEntity addToDo(TodoEntity todoEntity, String token) {
-        validateUser(todoEntity.getUserId(), token);
-        TodoEntity todo = new TodoEntity();
-        todo.setTitle(todoEntity.getTitle());
-        todo.setUserId(todoEntity.getUserId());
-        todo.setDetails_id(todoEntity.getDetails_id());
-        toDoEntityRepo.save(todo);
-        return todo;
+        int userId=validateUser(token);
+        if (todoEntity.getUserId() == userId) {
+            TodoEntity todo = new TodoEntity();
+            todo.setTitle(todoEntity.getTitle());
+            todo.setUserId(todoEntity.getUserId());
+            todo.setDetails_id(todoEntity.getDetails_id());
+            toDoEntityRepo.save(todo);
+            return todo;
+        }
+        else throw new TokenValidationException("user is not valid");
     }
 
     @Transactional
-    public String removeToDo(int id, int userId, String token) throws NotFoundException {
-        validateUser(userId, token);
+    public String removeToDo(int id,String token) throws NotFoundException {
+        int userId=validateUser( token);
         Optional<TodoEntity> todoEntity = toDoEntityRepo.findByIdAndUserId(id,userId);
         if (todoEntity.isEmpty()) throw new NotFoundException("not found to remove");
         toDoEntityRepo.delete(todoEntity.get());
@@ -51,29 +49,31 @@ public class ToDoService {
     }
 
     @Transactional
-    public TodoEntity viewToDoById(int id, int userId, String token) throws NotFoundException {
-        validateUser(userId, token);
+    public TodoEntity viewToDoById(int id, String token) throws NotFoundException {
+        int userId=validateUser(token);
         return toDoEntityRepo.findByIdAndUserId(id,userId).orElseThrow(() -> new NotFoundException("not found"));
     }
 
     @Transactional
-    public List<TodoEntity> viewToDoByTitle(String title, int userId, String token) {
-        validateUser(userId, token);
+    public List<TodoEntity> viewToDoByTitle(String title,String token) {
+        int userId=validateUser( token);
         return toDoEntityRepo.findAllByTitleAndUserId(title,userId);
     }
 
     @Transactional
     public List<TodoEntity> viewByUserId(int id, String token) {
-        validateUser(id, token);
-        return toDoEntityRepo.findAllByUserId(id);
+        int userId=validateUser(token);
+        if (userId==id) {
+            return toDoEntityRepo.findAllByUserId(id);
+        }
+        else throw new TokenValidationException("user is not valid");
     }
 
     @Transactional
-
-    public TodoEntity updateTitle(String title, int id, int userId, String token) throws NotFoundException {
-        validateUser(userId, token);
-
-        TodoEntity todoEntity = toDoEntityRepo.findById(id).orElseThrow(() -> new NotFoundException("not found"));
+    public TodoEntity updateTitle(String title, int id, String token) throws NotFoundException {
+        int userId=validateUser( token);
+        TodoEntity todoEntity = toDoEntityRepo.findByIdAndUserId(id,userId)
+                .orElseThrow(() -> new NotFoundException("not found"));
         todoEntity.setTitle(title);
         return toDoEntityRepo.save(todoEntity);
     }

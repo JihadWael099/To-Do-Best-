@@ -1,46 +1,45 @@
 package org.springboot.todoservice.services.implemenation;
 import org.springboot.todoservice.entity.UserDto;
+import org.springboot.todoservice.exception.TokenValidationException;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class UserService {
 
-    private RestTemplate restTemplate;
-    private final String userUrl = "http://localhost:8081/api/v1/user/{id}";
-    private final String validateUrl = "http://localhost:8081/api/v1/user/checkToken";
+    private final RestTemplate restTemplate;
 
-    public boolean validateToken(String token) {
+    public UserService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+    String validateUrl = "http://localhost:8081/api/v1/user";
+    public UserDto validateToken(String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
+        headers.setBearerAuth(token.trim());
         HttpEntity<Void> entity = new HttpEntity<>(headers);
-        try
-        {
-            ResponseEntity<String> response = restTemplate.exchange(
+        System.out.println(headers);
+
+        try {
+            ResponseEntity<UserDto> response = restTemplate.exchange(
                     validateUrl,
                     HttpMethod.GET,
                     entity,
-                    String.class
+                    UserDto.class
             );
-            return response.getStatusCode() == HttpStatus.OK;
-        }
-        catch (Exception ex) {
-            return false;
-        }
-    }
 
-    public UserDto getUserById(int id, String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-        ResponseEntity<UserDto> response = restTemplate.exchange(
-                userUrl,
-                HttpMethod.GET,
-                entity,
-                UserDto.class,
-                id
-        );
-        return response.getBody();
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                return response.getBody();
+            } else {
+                throw new TokenValidationException("Token validation failed: Unexpected status");
+            }
+
+        } catch (HttpClientErrorException | HttpServerErrorException ex) {
+            throw new TokenValidationException("Token validation failed: Unauthorized or error from user service");
+        } catch (Exception ex) {
+            throw new TokenValidationException("Token validation failed: Unexpected error");
+        }
     }
 }

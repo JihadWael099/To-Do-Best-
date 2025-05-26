@@ -1,5 +1,6 @@
 package org.springboot.userservice.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springboot.userservice.dto.UserDto;
 import org.springboot.userservice.entity.Users;
 import org.springboot.userservice.exceptions.UserAlreadyExistsException;
@@ -20,12 +21,28 @@ public class UserService implements UserDetailsService {
     private final UserRepo userRepo;
     private final OtpService otpService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
 
-    public UserService(UserRepo userRepo, OtpRepo otpRepo, @Lazy OtpService otpService, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepo userRepo, OtpRepo otpRepo, @Lazy OtpService otpService, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepo = userRepo;
         this.otpService = otpService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+    }
+
+    public UserDto getUserByToken(HttpServletRequest request) {
+        String token = jwtService.getTokenFromHeader(request);
+        String user = jwtService.getUsernameFromToken(token);
+        boolean valid = jwtService.validateToken(token);
+        Optional<Users> users = userRepo.findByUsername(user);
+        if (users.isPresent() && valid) {
+            UserDto userDto = new UserDto();
+            userDto.setId(users.get().getId());
+            userDto.setUsername(users.get().getUsername());
+            userDto.setEmail(users.get().getEmail());
+            return userDto;
+        } else throw new UserNotFoundException("user not found");
     }
 
     public Optional<Users> getUserByName(String username) {

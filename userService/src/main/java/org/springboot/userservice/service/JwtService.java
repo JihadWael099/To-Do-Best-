@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springboot.userservice.entity.JWT;
 import org.springboot.userservice.entity.Users;
 import org.springboot.userservice.repository.JwtRepo;
-import org.springboot.userservice.repository.UserRepo;
 import org.springboot.userservice.util.TokenType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +26,10 @@ public class JwtService {
     private final JwtParser jwtParser;
     private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     private final JwtRepo jwtRepo;
-    private final UserRepo userRepo;
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
-    public JwtService(JwtRepo jwtRepo, UserRepo userRepo) {
+    public JwtService(JwtRepo jwtRepo) {
         this.jwtRepo = jwtRepo;
-        this.userRepo = userRepo;
         this.jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
     }
 
@@ -58,13 +55,13 @@ public class JwtService {
     }
 
     public Claims convertJwtClaims(String token) {
-        return jwtParser.parseClaimsJws(token).getBody();
+        return jwtParser.parseClaimsJws(token.trim()).getBody();
     }
 
     public String getTokenFromHeader(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
+            return authHeader.substring(7).trim();
         }
         return null;
     }
@@ -92,6 +89,7 @@ public class JwtService {
     }
 
     public String getUsernameFromToken(String token) {
+        System.out.println(token);
         return jwtParser.parseClaimsJws(token).getBody().getSubject();
     }
 }

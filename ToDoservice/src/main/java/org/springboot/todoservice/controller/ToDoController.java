@@ -27,40 +27,36 @@ public class ToDoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> removeToDo(
             @RequestHeader("Authorization") String token,
-            @RequestParam int userId,
             @PathVariable("id") int id) throws NotFoundException {
-        return ResponseEntity.ok(toDoService.removeToDo(id, userId, token));
+        return ResponseEntity.ok(toDoService.removeToDo(id, token));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TodoEntity> viewToDoById(
             @RequestHeader("Authorization") String token,
-            @RequestParam int userId,
             @PathVariable("id") int id) throws NotFoundException {
-        return ResponseEntity.ok(toDoService.viewToDoById(id, userId, token));
+        return ResponseEntity.ok(toDoService.viewToDoById(id,  token));
     }
 
     @GetMapping("/title/{title}")
     public ResponseEntity<List<TodoEntity>> viewToDoByTitle(
             @RequestHeader("Authorization") String token,
-            @RequestParam int userId,
             @PathVariable("title") String title) {
-        return ResponseEntity.ok(toDoService.viewToDoByTitle(title, userId, token));
+        return ResponseEntity.ok(toDoService.viewToDoByTitle(title, token));
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/user")
     public ResponseEntity<List<TodoEntity>> viewByUserId(
             @RequestHeader("Authorization") String token,
-            @PathVariable("id") int userId) {
-        return ResponseEntity.ok(toDoService.viewByUserId(userId, token));
+            @RequestParam int id) {
+        return ResponseEntity.ok(toDoService.viewByUserId(id, token));
     }
 
     @PutMapping("/title/{title}/id/{id}")
     public ResponseEntity<TodoEntity> updateTitle(
             @RequestHeader("Authorization") String token,
-            @RequestParam int userId,
             @PathVariable("title") String title,
             @PathVariable("id") int id) throws NotFoundException {
-        return ResponseEntity.ok(toDoService.updateTitle(title, id, userId, token));
+        return ResponseEntity.ok(toDoService.updateTitle(title, id, token));
     }
 }
