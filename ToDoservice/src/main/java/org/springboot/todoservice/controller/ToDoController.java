@@ -10,13 +10,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/toDos")
 public class ToDoController {
-
     private final ToDoService toDoService;
-
     public ToDoController(ToDoService toDoService) {
         this.toDoService = toDoService;
     }
-
     @PostMapping("")
     public ResponseEntity<TodoEntity> addToDo(
             @RequestHeader("Authorization") String token,

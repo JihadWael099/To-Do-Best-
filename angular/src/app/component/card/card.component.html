@@ -1,15 +1,10 @@
-<!-- <div class="card h-100 shadow p-3 mb-5 bg-body-tertiary rounded">
-  <img [src]="movie.poster" class="card-img-top" alt="product image">
-  <div class="card-body">
-    <h5 class="card-title">{{ movie.title }}</h5>
-    <p class="card-text">{{ movie.actors }}</p>
-    <button type="button" class="btn btn-success" (click)="handleDetailsItem(movie.imdbID)">View Details</button>
-
-    <ng-container *ngIf="isAdmin">
-      <ng-container *ngIf="!fromDatabase">
-        <button type="button" class="btn btn-warning" (click)="handleAddItem(movie)">Add</button>
-      </ng-container>
-      <button type="button" class="btn btn-danger" (click)="handleDeleteItem(movie.imdbID)">Delete</button>
-    </ng-container>
+<div class="card shadow-sm mb-3">
+  <div class="card-header d-flex align-items-center">
+    <input type="checkbox" class="me-2" [checked]="toDo?.id === undefined" (change)="handleAddItem(toDo)">
+    <h3 class="card-title mb-0">{{ toDo?.title }}</h3>
   </div>
-</div> -->
+  <div class="card-body">
+    <button class="btn btn-primary me-2" (click)="handleDetailsItem(toDo!.id)" *ngIf="toDo?.id">View Details</button>
+    <button class="btn btn-danger" (click)="handleDeleteItem(toDo!.id)" *ngIf="toDo?.id">Delete</button>
+  </div>
+</div>

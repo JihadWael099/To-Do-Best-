@@ -51,30 +51,33 @@ export class RegisterComponent {
 
     console.log('Registering user:', registerData);
 
-    this.authService.register(registerData).subscribe({
-      next: () => {
-        console.log('Registration successful, sending OTP for username:', registerData.username);
-        this.otpService.sendOtpEmail(registerData.username).subscribe({
-          next: (response) => {
-            this.isLoading = false;
-            if (response === 'OTP email sent successfully!') {
-              this.router.navigate(['verify-otp'], { queryParams: { username: registerData.username } });
-            } else {
-              this.errorMessage = response || 'Unexpected OTP response';
-            }
-          },
-          error: (err) => {
-            this.isLoading = false;
-            this.errorMessage = 'Failed to send OTP: ' + (err.message || 'Unknown error');
-            console.error('OTP Error:', err);
-          }
-        });
+   this.authService.register(registerData).subscribe({
+  next: (token) => {
+    this.authService.saveToken(token);  
+    console.log('Registration successful, token saved, sending OTP for username:', registerData.username);
+    
+    this.otpService.sendOtpEmail(registerData.username).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response === 'OTP email sent successfully!') {
+          this.router.navigate(['verify-otp'], { queryParams: { username: registerData.username } });
+        } else {
+          this.errorMessage = response || 'Unexpected OTP response';
+        }
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Registration failed. Please try again.';
-        console.error('Registration Error:', err);
+        this.errorMessage = 'Failed to send OTP: ' + (err.message || 'Unknown error');
+        console.error('OTP Error:', err);
       }
     });
+  },
+  error: (err) => {
+    this.isLoading = false;
+    this.errorMessage = err.error?.message || 'Registration failed. Please try again.';
+    console.error('Registration Error:', err);
+  }
+});
+
   }
 }

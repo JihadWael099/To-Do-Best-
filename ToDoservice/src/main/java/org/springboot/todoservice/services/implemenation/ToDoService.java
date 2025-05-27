@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 @Service
 public class ToDoService {
@@ -24,6 +25,9 @@ public class ToDoService {
     private int validateUser(String token) {
         UserDto userDto = userService.validateToken(token);
         return userDto.getId();
+    }
+    private UserDto validateUserName(String token) {
+        return userService.validateToken(token);
     }
 
     @Transactional
@@ -62,10 +66,10 @@ public class ToDoService {
     }
 
     @Transactional
-    public List<TodoEntity> viewByUserId(int id, String token) {
-        int userId=validateUser(token);
-        if (userId==id) {
-            List<TodoEntity> todos = toDoEntityRepo.findAllByUserId(id);
+    public List<TodoEntity> viewByUserName(String name, String token) {
+        UserDto user=validateUserName(token);
+        if (Objects.equals(user.getUsername(), name)) {
+            List<TodoEntity> todos = toDoEntityRepo.findAllByUserId(user.getId());
             todos.sort(Comparator.comparing(
                     todo -> todo.getDetails_id().getPriority()
             ));
