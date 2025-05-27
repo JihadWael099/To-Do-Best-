@@ -7,6 +7,7 @@ import org.springboot.todoservice.repositories.ToDoEntityRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -64,7 +65,11 @@ public class ToDoService {
     public List<TodoEntity> viewByUserId(int id, String token) {
         int userId=validateUser(token);
         if (userId==id) {
-            return toDoEntityRepo.findAllByUserId(id);
+            List<TodoEntity> todos = toDoEntityRepo.findAllByUserId(id);
+            todos.sort(Comparator.comparing(
+                    todo -> todo.getDetails_id().getPriority()
+            ));
+            return todos;
         }
         else throw new TokenValidationException("user is not valid");
     }
@@ -77,4 +82,5 @@ public class ToDoService {
         todoEntity.setTitle(title);
         return toDoEntityRepo.save(todoEntity);
     }
+
 }

@@ -31,7 +31,7 @@ public class ToDoController {
         return ResponseEntity.ok(toDoService.removeToDo(id, token));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/search/{id}")
     public ResponseEntity<TodoEntity> viewToDoById(
             @RequestHeader("Authorization") String token,
             @PathVariable("id") int id) throws NotFoundException {

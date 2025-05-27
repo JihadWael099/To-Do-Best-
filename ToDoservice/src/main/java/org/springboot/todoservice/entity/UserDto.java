@@ -1,40 +1,22 @@
 package org.springboot.todoservice.entity;
-
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
-    private  int id;
+
+    @Min(value = 1, message = "ID must be greater than 0")
+    private int id;
+
+    @NotBlank(message = "Username must not be blank")
     private String username;
+
+    @NotBlank(message = "Email must not be blank")
+    @Email(message = "Email should be valid")
     private String email;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public UserDto(int id, String username, String email) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-    }
-
-    public UserDto() {
-    }
 }
