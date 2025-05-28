@@ -10,8 +10,6 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-       
         <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
           <li class="nav-item">
             <a class="nav-link" routerLink="/register">Register</a>
@@ -21,26 +19,29 @@
           </li>
         </ng-container>
 
-       
         <ng-template #loggedIn>
-      
           <li class="nav-item">
             <a class="nav-link" (click)="logout()">Logout</a>
           </li>
         </ng-template>
-
       </ul>
 
-      <input  *ngIf="authService.isLoggedIn()"
-        type="text" 
-        [formControl]="searchControl"
-        (keyup.enter)="search()"
-        placeholder="Search books..."
-        class="w-full lg:w-72 rounded-full border border-orange bg-transparent py-2 px-4 text-orange placeholder-orange focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-500 transition"
-      />
-      <button *ngIf=" authService.isLoggedIn()" (click)="search()" class="absolute right-3 text-orange hover:text-orange-400">
-        search
-      </button>
+      <div *ngIf="authService.isLoggedIn()" class="d-flex align-items-center gap-2">
+        <input
+          type="text"
+          [formControl]="searchControl"
+          (keyup.enter)="search()"
+          placeholder="Search books..."
+          class="w-full lg:w-72 rounded-full border border-orange bg-transparent py-2 px-4 text-orange placeholder-orange focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-500 transition"
+        />
+        <button (click)="search()" class="text-orange hover:text-orange-400">
+          search
+        </button>
+
+        <a class="nav-link" routerLink="/profile">
+          <i class="fas fa-user-circle fa-2x text-primary"></i>
+        </a>
+      </div>
     </div>
   </div>
 </nav>

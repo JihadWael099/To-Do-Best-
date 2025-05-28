@@ -28,6 +28,6 @@ export class AuthService {
     localStorage.removeItem('authToken');
   }
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    return !this.getToken();
   }
 }

@@ -1,5 +1,39 @@
-.blur-image {
-    filter: blur(1.5px);
-    opacity: 0.9;
-  }
-  
+.home-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.task-list-container {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.task-details-container {
+  width: 400px;
+  border-left: 1px solid #ddd;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.add-task {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.add-task input {
+  flex: 1;
+  padding: 10px;
+  margin-right: 10px;
+}
+
+.add-task button {
+  padding: 10px 20px;
+}

@@ -32,6 +32,7 @@ public class ToDoService {
 
     @Transactional
     public TodoEntity addToDo(TodoEntity todoEntity, String token) {
+        System.out.println(todoEntity.toString());
         int userId=validateUser(token);
         if (todoEntity.getUserId() == userId) {
             TodoEntity todo = new TodoEntity();

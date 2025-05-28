@@ -1,0 +1,21 @@
+<div class="task-item border rounded p-3 mb-3 d-flex flex-column bg-light" [class.completed]="task.completed">
+  <div class="task-main d-flex align-items-center justify-content-between">
+    
+    <div class="form-check d-flex align-items-center">
+      <input
+        class="form-check-input me-2"
+        type="checkbox"
+        [checked]="task.completed"
+        (change)="toggleCompletion()"
+      >
+      <label class="form-check-label fw-bold task-title">
+        {{ task.title }}
+      </label>
+    </div>
+
+    <button class="btn btn-outline-secondary btn-sm" (click)="toggleDetails()">
+      <i class="fas fa-chevron-right" [class.rotated]="showDetails"></i>
+    </button>
+    
+  </div>
+</div>

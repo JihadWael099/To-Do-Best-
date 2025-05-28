@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @RestController
 @RequestMapping("/api/v1/toDos")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ToDoController {
     private final ToDoService toDoService;
     public ToDoController(ToDoService toDoService) {
@@ -43,10 +44,10 @@ public class ToDoController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<TodoEntity>> viewByUserId(
+    public ResponseEntity<List<TodoEntity>> viewByUserName(
             @RequestHeader("Authorization") String token,
-            @RequestParam int id) {
-        return ResponseEntity.ok(toDoService.viewByUserId(id, token));
+            @RequestParam String username) {
+        return ResponseEntity.ok(toDoService.viewByUserName( username,token));
     }
 
     @PutMapping("/title/{title}/id/{id}")

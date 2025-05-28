@@ -1,0 +1,66 @@
+<div class="task-details border rounded p-4 bg-white shadow-sm mt-3">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">{{ task.title }}</h4>
+    <button class="btn btn-sm btn-light" (click)="close.emit()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Form -->
+  <div class="details-form row g-3">
+    <div class="col-12">
+      <label for="description" class="form-label">Description</label>
+      <textarea
+        id="description"
+        class="form-control"
+        rows="3"
+        [(ngModel)]="taskDetails.description">
+      </textarea>
+    </div>
+
+    <div class="col-md-6">
+      <label for="priority" class="form-label">Priority</label>
+      <select
+        id="priority"
+        class="form-select"
+        [(ngModel)]="taskDetails.priority">
+        <option *ngFor="let priority of priorities" [value]="priority">{{ priority }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label for="status" class="form-label">Status</label>
+      <select
+        id="status"
+        class="form-select"
+        [(ngModel)]="taskDetails.status">
+        <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label for="startAt" class="form-label">Start Date</label>
+      <input
+        id="startAt"
+        type="datetime-local"
+        class="form-control"
+        [(ngModel)]="taskDetails.startAt">
+    </div>
+
+    <div class="col-md-6">
+      <label for="finishAt" class="form-label">End Date</label>
+      <input
+        id="finishAt"
+        type="datetime-local"
+        class="form-control"
+        [(ngModel)]="taskDetails.finishAt">
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="mt-4 d-flex justify-content-end gap-2">
+    <button class="btn btn-primary" (click)="saveChanges()">Save Changes</button>
+    <button class="btn btn-danger" (click)="deleteTask()">Delete Task</button>
+  </div>
+</div>

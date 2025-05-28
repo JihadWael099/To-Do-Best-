@@ -36,7 +36,9 @@ export class LoginComponent {
       next: (response) => {
         this.isLoading = false;
         console.log('Login success!', response);
-        this.router.navigate(['/movies']);
+        localStorage.setItem("authToken",response.token);
+         localStorage.setItem("username",response.username);
+        this.router.navigate(['/home']);
       },
       error: (err) => {
         this.isLoading = false;

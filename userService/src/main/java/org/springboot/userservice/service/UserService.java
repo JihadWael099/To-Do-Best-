@@ -1,6 +1,7 @@
 package org.springboot.userservice.service;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springboot.userservice.dto.LoginDto;
 import org.springboot.userservice.dto.UserDto;
 import org.springboot.userservice.entity.Users;
 import org.springboot.userservice.exceptions.UserAlreadyExistsException;
@@ -8,6 +9,7 @@ import org.springboot.userservice.exceptions.UserNotFoundException;
 import org.springboot.userservice.repository.OtpRepo;
 import org.springboot.userservice.repository.UserRepo;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -65,9 +67,13 @@ public class UserService implements UserDetailsService {
         return userRepo.save(newUser);
     }
 
-    public void deleteUser(int id) {
-        Users user = getUserById(id);
-        userRepo.delete(user);
+    public void deleteUser(LoginDto loginDto) {
+        Optional<Users> user = getUserByName(loginDto.getUsername());
+        if (user.isPresent()) {
+            if (passwordEncoder.matches(loginDto.getPassword(), user.get().getPassword()))
+                userRepo.delete(user.get());
+            else throw new BadCredentialsException("there is a problem with username or password");
+        } else throw new UserNotFoundException("user is not found");
     }
 
     public Users updateUser(int id, Users updatedUser) {
@@ -114,7 +120,7 @@ public class UserService implements UserDetailsService {
 
     public UserDto getUserDtoById(int id) {
         Optional<Users> users = userRepo.findById(id);
-        if (!users.isPresent()) {
+        if (users.isEmpty()) {
             throw new UserNotFoundException("user not found");
         }
         UserDto userDto = new UserDto();

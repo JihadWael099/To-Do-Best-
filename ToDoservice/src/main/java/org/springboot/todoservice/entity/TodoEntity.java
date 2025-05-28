@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class TodoEntity {
 
     @Id
@@ -30,4 +31,13 @@ public class TodoEntity {
     @JoinColumn(name = "id")
     private ToDoDetails details_id;
 
+    @Override
+    public String toString() {
+        return "TodoEntity{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", userId=" + userId +
+                ", details_id=" + details_id +
+                '}';
+    }
 }
