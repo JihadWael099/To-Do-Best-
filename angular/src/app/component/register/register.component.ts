@@ -53,7 +53,7 @@ export class RegisterComponent {
 
    this.authService.register(registerData).subscribe({
   next: (token) => {
-    this.authService.saveToken(token);  
+    localStorage.setItem("register",token);
     console.log('Registration successful, token saved, sending OTP for username:', registerData.username);
     
     this.otpService.sendOtpEmail(registerData.username).subscribe({

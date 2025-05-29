@@ -1,11 +1,19 @@
-<div class="home-container">
+<!-- Loading spinner overlay -->
+<div *ngIf="loading" class="position-fixed top-0 start-0 w-100 vh-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75" style="z-index: 1050;">
+  <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<div *ngIf="isLoggedIn" class="home-container">
   <div class="content">
+  
     <div class="task-list-container">
-      <div class="add-task">
-        <input [(ngModel)]="newTaskTitle" placeholder="Add new task..." (keyup.enter)="addTask()">
-        <button (click)="addTask()">Add</button>
+      <div class="add-task mb-3 d-flex">
+        <input [(ngModel)]="newTaskTitle" placeholder="Add new task..." (keyup.enter)="addTask()" class="form-control me-2">
+        <button (click)="addTask()" class="btn btn-primary">Add</button>
       </div>
-      
+
       <div class="task-list">
         <app-task-item 
           *ngFor="let task of todos" 
@@ -14,8 +22,8 @@
         </app-task-item>
       </div>
     </div>
-    
-    <div class="task-details-container" *ngIf="selectedTask">
+
+    <div class="task-details-container mt-3" *ngIf="selectedTask">
       <app-task-details 
         [task]="selectedTask" 
         (close)="closeDetails()"
@@ -23,5 +31,11 @@
         (deleted)="onTaskDeleted($event)">
       </app-task-details>
     </div>
+  </div>
+</div>
+
+<div *ngIf="!isLoggedIn" class="d-flex flex-column justify-content-center align-items-center vh-100">
+  <div class="alert alert-info text-center w-50">
+    <p class="mb-3 fs-5">Please log in to see your tasks.</p>
   </div>
 </div>

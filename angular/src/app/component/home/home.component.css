@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+ margin-left: 100px;
+ margin-right: 100px;
 }
 
 .content {
@@ -17,7 +19,7 @@
 }
 
 .task-details-container {
-  width: 400px;
+  width: 500px;
   border-left: 1px solid #ddd;
   padding: 20px;
   overflow-y: auto;

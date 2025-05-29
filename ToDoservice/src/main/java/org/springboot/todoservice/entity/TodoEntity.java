@@ -13,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class TodoEntity {
 
     @Id
@@ -23,13 +22,12 @@ public class TodoEntity {
     @NotBlank(message = "you should enter a title")
     private String title;
 
-
     @NotNull(message = "you should enter a user id")
     private int userId;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
-    private ToDoDetails details_id;
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "details_id", referencedColumnName = "id")
+    private ToDoDetails toDoDetails;
 
     @Override
     public String toString() {
@@ -37,7 +35,7 @@ public class TodoEntity {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", userId=" + userId +
-                ", details_id=" + details_id +
+                ", toDoDetails=" + toDoDetails +
                 '}';
     }
 }

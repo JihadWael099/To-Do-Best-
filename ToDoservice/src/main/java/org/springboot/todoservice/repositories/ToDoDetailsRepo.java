@@ -8,4 +8,6 @@ import java.util.Optional;
 @Repository
 public interface ToDoDetailsRepo extends JpaRepository<ToDoDetails,Integer> {
     ToDoDetails findByIdAndUserId(int id, int userId);
+
+    ToDoDetails findByEntityIdAndUserId(int id, int userId);
 }

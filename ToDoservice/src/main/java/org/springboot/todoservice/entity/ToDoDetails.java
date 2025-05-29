@@ -19,28 +19,34 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ToDoDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String description;
+
     @Enumerated(EnumType.STRING)
     @NotNull(message = "you should enter the priority")
     private Priority priority;
+
     @CreationTimestamp
     private LocalDateTime createAt;
+
     @NotNull(message = "you should enter the start time")
     private LocalDateTime startAt;
+
     @NotNull(message = "you should enter the end time")
     private LocalDateTime finishAt;
+
     @Enumerated(EnumType.STRING)
     @NotNull(message = "you should enter the status")
     private Status status;
-    @OneToOne(mappedBy = "details_id", cascade = CascadeType.ALL)
+
+    @OneToOne(mappedBy = "toDoDetails", cascade = CascadeType.ALL)
     @JsonIgnore
     private TodoEntity todoEntity;
-
-    @Transient
-    @NotNull(message = "entity ID is required")
+    
     private int entityId;
 
     @JsonIgnore

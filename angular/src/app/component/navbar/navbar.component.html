@@ -10,7 +10,7 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
+        <ng-container *ngIf="!authService.isLoggedIn(); else loggedInBlock">
           <li class="nav-item">
             <a class="nav-link" routerLink="/register">Register</a>
           </li>
@@ -18,14 +18,14 @@
             <a class="nav-link" routerLink="/login">Login</a>
           </li>
         </ng-container>
-
-        <ng-template #loggedIn>
+        <ng-template #loggedInBlock>
           <li class="nav-item">
-            <a class="nav-link" (click)="logout()">Logout</a>
+            <a class="nav-link" (click)="logout()" style="cursor:pointer;">Logout</a>
           </li>
         </ng-template>
       </ul>
 
+    
       <div *ngIf="authService.isLoggedIn()" class="d-flex align-items-center gap-2">
         <input
           type="text"
@@ -34,11 +34,11 @@
           placeholder="Search books..."
           class="w-full lg:w-72 rounded-full border border-orange bg-transparent py-2 px-4 text-orange placeholder-orange focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-500 transition"
         />
-        <button (click)="search()" class="text-orange hover:text-orange-400">
+        <button (click)="search()" class="text-orange hover:text-orange-400 btn btn-primary me-5">
           search
         </button>
 
-        <a class="nav-link" routerLink="/profile">
+        <a class="nav-link me-2" routerLink="/profile" >
           <i class="fas fa-user-circle fa-2x text-primary"></i>
         </a>
       </div>

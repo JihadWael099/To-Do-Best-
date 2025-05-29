@@ -1,0 +1,58 @@
+<div class="container py-4">
+
+  <div *ngIf="loadingUser" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="errorLoadingUser" class="alert alert-danger text-center">
+    {{ errorLoadingUser }}
+  </div>
+
+  
+  <div *ngIf="user" class="card shadow-sm p-4 mb-4">
+    <h3 class="text-primary">User Profile</h3>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+
+    <button class="btn btn-outline-primary mt-3" (click)="toggleChangePasswordForm()">
+      {{ showChangePasswordForm ? 'Cancel' : 'Change Password' }}
+    </button>
+  </div>
+
+  <div *ngIf="showChangePasswordForm" class="card shadow-sm p-4">
+    <button class="btn btn-secondary mb-3" (click)="sendOtp()" [disabled]="otpSent">
+      {{ otpSent ? 'OTP Sent' : 'Send OTP to Email' }}
+    </button>
+
+    <form [formGroup]="changePasswordForm" (ngSubmit)="onChangePassword()">
+      <div class="mb-3">
+        <label for="oldPassword" class="form-label">Old Password</label>
+        <input id="oldPassword" type="password" class="form-control" formControlName="oldPassword" />
+      </div>
+
+      <div class="mb-3">
+        <label for="newPassword" class="form-label">New Password</label>
+        <input id="newPassword" type="password" class="form-control" formControlName="newPassword" />
+      </div>
+
+      <div class="mb-3">
+        <label for="otp" class="form-label">OTP</label>
+        <input id="otp" type="text" class="form-control" formControlName="otp" />
+      </div>
+
+      <button type="submit" class="btn btn-success w-100" [disabled]="changePasswordForm.invalid">
+        Change Password
+      </button>
+    </form>
+
+    <div *ngIf="changePasswordMessage" class="alert alert-success mt-3">
+      {{ changePasswordMessage }}
+    </div>
+
+    <div *ngIf="changePasswordError" class="alert alert-danger mt-3">
+      {{ changePasswordError }}
+    </div>
+  </div>
+</div>

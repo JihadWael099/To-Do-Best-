@@ -35,7 +35,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/api/v1/user/changePassword")
+    @PostMapping("/changePassword")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDto changePasswordDto,
                                             @RequestHeader("otp") String otp
     ) {

@@ -9,5 +9,4 @@ export interface ToDoDetails {
   finishAt?: Date;
   status?: Status;
   entityId?: number;
-  userId: number;
 }

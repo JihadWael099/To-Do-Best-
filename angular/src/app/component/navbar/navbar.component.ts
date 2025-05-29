@@ -20,9 +20,12 @@ export class NavbarComponent {
   authService=inject(AuthService);
 
   searchControl = new FormControl('');
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
   logout() {
     this.authService.logout();
-    this.router.navigate(['']);
+    this.router.navigate(['/home']);
   }
   search() {
     let searchString = '';

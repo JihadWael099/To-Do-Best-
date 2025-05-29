@@ -38,7 +38,7 @@ public class ToDoService {
             TodoEntity todo = new TodoEntity();
             todo.setTitle(todoEntity.getTitle());
             todo.setUserId(todoEntity.getUserId());
-            todo.setDetails_id(todoEntity.getDetails_id());
+            todo.setToDoDetails(todoEntity.getToDoDetails());
             toDoEntityRepo.save(todo);
             return todo;
         }
@@ -70,11 +70,7 @@ public class ToDoService {
     public List<TodoEntity> viewByUserName(String name, String token) {
         UserDto user=validateUserName(token);
         if (Objects.equals(user.getUsername(), name)) {
-            List<TodoEntity> todos = toDoEntityRepo.findAllByUserId(user.getId());
-            todos.sort(Comparator.comparing(
-                    todo -> todo.getDetails_id().getPriority()
-            ));
-            return todos;
+            return toDoEntityRepo.findAllByUserId(user.getId());
         }
         else throw new TokenValidationException("user is not valid");
     }

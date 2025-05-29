@@ -18,12 +18,12 @@ export class ToDoService {
       'Authorization': `${token}`
     });
   }
-
-  getTodos(userId: number): Observable<Todo[]> {
-    const headers = this.getAuthHeaders();
-    return this.http.get<Todo[]>(this.apiUrl, { headers });
-  }
-
+ 
+getTodosByUsername(username: string): Observable<Todo[]> {
+  const headers = this.getAuthHeaders();
+  const params = new HttpParams().set('username', username);
+  return this.http.get<Todo[]>(`${this.apiUrl}/user`, { headers, params });
+}
   addTodo(todo: Todo): Observable<Todo> {
     const headers = this.getAuthHeaders();
     return this.http.post<Todo>(this.apiUrl, todo, { headers });
@@ -34,14 +34,18 @@ export class ToDoService {
     return this.http.put<Todo>(`${this.apiUrl}/${todo.id}`, todo, { headers });
   }
 
-  deleteTodo(id: number): Observable<void> {
-    const headers = this.getAuthHeaders();
-    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
-  }
+ deleteTodo(id: number): Observable<string> {
+  const headers = this.getAuthHeaders();
+  return this.http.delete<string>(`${this.apiUrl}/${id}`, { headers, responseType: 'text' as 'json' });
+}
+
 
   updateTodoDetails(details: ToDoDetails): Observable<ToDoDetails> {
     const headers = this.getAuthHeaders();
     return this.http.put<ToDoDetails>(`${this.apiUrl}/details/${details.id}`, details, { headers });
   }
-  
+  viewToDoByTitle(title: string): Observable<Todo[]> {
+  const headers = this.getAuthHeaders();
+  return this.http.get<Todo[]>(`${this.apiUrl}/title/${encodeURIComponent(title)}`, { headers });
+}
 }

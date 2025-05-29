@@ -133,11 +133,8 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Users> user = userRepo.findByUsername(username);
-        if (user.isPresent()) {
-            return user.get();
-        }
-        throw new UsernameNotFoundException("User not found: " + username);
+        return userRepo.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     public String changePassword(String username, String oldPassword, String newPassword, String otpCode) {
@@ -153,8 +150,10 @@ public class UserService implements UserDetailsService {
         if (!otpValid) {
             return "Invalid or expired OTP";
         }
+        System.out.println("Old password (hashed): " + user.getPassword());
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepo.save(user);
+        System.out.println("New password (hashed): " + user.getPassword());
         return "Password changed successfully";
     }
 

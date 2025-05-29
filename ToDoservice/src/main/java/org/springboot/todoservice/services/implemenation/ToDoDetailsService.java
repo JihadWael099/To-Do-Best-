@@ -1,4 +1,5 @@
 package org.springboot.todoservice.services.implemenation;
+import com.sun.source.tree.NewArrayTree;
 import org.springboot.todoservice.entity.ToDoDetails;
 import org.springboot.todoservice.entity.UserDto;
 import org.springboot.todoservice.exception.NotFoundException;
@@ -49,7 +50,7 @@ public class ToDoDetailsService {
     public ToDoDetails viewDetailsById(int id,String token) throws NotFoundException {
         int userId=validateUser(token);
         if (userId >=0) {
-            ToDoDetails toDo=toDoDetailsRepo.findByIdAndUserId(id, userId);
+            ToDoDetails toDo=toDoDetailsRepo.findByEntityIdAndUserId(id, userId);
             if (toDo !=null){
                 return toDo;
             }
@@ -58,12 +59,31 @@ public class ToDoDetailsService {
         else throw new NotFoundException("user is not found");
     }
     @Transactional
-    public ToDoDetails addDetails(ToDoDetails toDoDetails , String token) throws NotFoundException {
-        int userId=validateUser(token);
-        toDoDetails.setUserId(userId);
-        return toDoEntityRepo.findByIdAndUserId(toDoDetails.getEntityId(),userId)
-                .map(entity -> toDoDetailsRepo.save(toDoDetails))
+    public ToDoDetails addDetails(ToDoDetails newDetails, String token) throws NotFoundException {
+        int userId = validateUser(token);
+
+        return toDoEntityRepo.findByIdAndUserId(newDetails.getEntityId(), userId)
+                .map(entity -> {
+                    newDetails.setUserId(userId);
+                    ToDoDetails existingDetails = entity.getToDoDetails();
+                    if (existingDetails != null) {
+                        existingDetails.setPriority(newDetails.getPriority());
+                        existingDetails.setFinishAt(newDetails.getFinishAt());
+                        existingDetails.setDescription(newDetails.getDescription());
+                        existingDetails.setStartAt(newDetails.getStartAt());
+                        existingDetails.setStatus(newDetails.getStatus());
+                        existingDetails.setDescription(newDetails.getDescription());
+                        return toDoDetailsRepo.save(existingDetails);
+                    } else {
+                        newDetails.setTodoEntity(entity);
+                        entity.setToDoDetails(newDetails);
+                        toDoEntityRepo.save(entity);
+                        return newDetails;
+                    }
+                })
                 .orElseThrow(() -> new NotFoundException("ToDoEntity not found"));
     }
+
+
 
 }
