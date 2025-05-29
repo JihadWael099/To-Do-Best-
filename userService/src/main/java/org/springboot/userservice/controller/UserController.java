@@ -2,6 +2,7 @@ package org.springboot.userservice.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springboot.userservice.dto.ChangePasswordDto;
+import org.springboot.userservice.dto.LoginDto;
 import org.springboot.userservice.dto.UserDto;
 import org.springboot.userservice.exceptions.UserNotFoundException;
 import org.springboot.userservice.service.OtpService;
@@ -75,6 +76,13 @@ public class UserController {
     @GetMapping("")
     public ResponseEntity<UserDto> getUserByToken(HttpServletRequest httpServletRequest) {
         return ResponseEntity.ok(userService.getUserByToken(httpServletRequest));
+    }
+
+
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteUser(@RequestBody LoginDto loginDto) {
+        userService.deleteUser(loginDto);
+        return ResponseEntity.ok("deletes");
     }
 
 
